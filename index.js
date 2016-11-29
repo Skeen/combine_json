@@ -32,7 +32,7 @@ var read_all = function(files, callback)
                 if (err) 
                 {
                     console.error(err);
-                    return;
+                    process.exit(1);
                 }
                 var json;
                 try
@@ -42,7 +42,7 @@ var read_all = function(files, callback)
                 catch(e)
                 {
                     console.error(e);
-                    return;
+                    process.exit(1);
                 }
                 // Accumulate
                 var merged = [].concat.apply(acc, json);
@@ -62,7 +62,7 @@ ls('./done', function(err, tree)
     if(err)
     {
         console.error(err);
-        return;
+        process.exit(1);
     }
 
     var filtered = tree.filter(function(element)
@@ -75,10 +75,12 @@ ls('./done', function(err, tree)
     read_all(filtered, function(accum)
     {
         var stringified = JSON.stringify(accum);
+        // Output to screen
         if(options.quiet != true)
         {
             console.log(stringified);
         }
+        // Output to file if required to do so
         if(options.outputFile != undefined)
         {
             fs.writeFile(options.outputFile, stringified, function(err) 
@@ -86,10 +88,11 @@ ls('./done', function(err, tree)
                 if(err)
                 {
                     console.error(err);
-                    return;
+                    process.exit(1);
                 }
             });
         }
+     
     });
 });
 
